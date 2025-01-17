@@ -1,0 +1,41 @@
+# version: '3.8'
+
+services:
+  apache_cazorla_arthur:
+    # nom du service
+    build: apache # dossier contenant le Dockerfile
+    container_name: apache_cazorla_arthur # nom du container
+    restart: always # redémarrage automatique
+    ports:
+      # ports exposés
+      - "8085:80"
+    volumes:
+      # volumes montés
+      - ./www:/var/www/html
+      - ./apache/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+    environment:
+      # variables d'environnement
+      - PHP_ERROR_REPORTING=E_ALL # afficher toutes les erreurs
+      - PHP_DISPLAY_ERRORS=On # afficher les erreurs
+
+  mariadb_cazorla_arthur:
+    # nom du service
+    image: mariadb:latest # image à utiliser
+    container_name: mariadb_cazorla_arthur # nom du container
+    restart: always # redémarrage automatique
+    ports:
+      # ports exposés
+      - "3309:3306"
+    environment:
+      # variables d'environnement
+      - MYSQL_ROOT_PASSWORD=superAdmin # mot de passe root
+      - MYSQL_DATABASE=Vetement # nom de la base de données
+      - MYSQL_USER=Arthur # nom de l'utilisateur
+      - MYSQL_PASSWORD=Stage@2024 # mot de passe de l'utilisateur
+    volumes:
+      # volumes montés
+      - ./mysql:/var/lib/mysql
+      - ./db:/root # envoi le répertoire db dans le container
+
+volumes:
+  mysql:
