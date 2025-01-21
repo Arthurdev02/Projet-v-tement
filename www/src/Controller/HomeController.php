@@ -16,6 +16,7 @@ class HomeController extends AbstractController
     {
         return $this->render('home/index.html.twig');
     }
+
     /**
      * Route pour aller voir le catalogue des articles
      */
@@ -40,5 +41,21 @@ class HomeController extends AbstractController
     public function contact(): Response
     {
         return $this->render('contact/index.html.twig');
+    }
+    /**
+     * Route pour me connecter
+     */
+    #[Route('/connect', name: 'connect')]
+    public function connect(): Response
+    {
+        return $this->render('form/connect.html.twig');
+    }
+    /**
+     * Route pour m'inscrire
+     */
+    #[Route('/login', name: 'login')]
+    public function login(): Response
+    {
+        return $this->render('form/login.html.twig');
     }
 }

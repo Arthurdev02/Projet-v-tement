@@ -1,0 +1,18 @@
+{% block body %}
+<header>
+	<nav class="navbar">
+		<ul class="navbar-list">
+			<li>
+				<a href="{{ path('home') }}">Home</a>
+			</li>
+			<li>
+				<a href="{{ path('catalogue') }}">Catalogue</a>
+			</li>
+			<li>
+				<button id="auth-button" class="btn">{{'S\'Inscrire'}}</button>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+{% endblock %}
