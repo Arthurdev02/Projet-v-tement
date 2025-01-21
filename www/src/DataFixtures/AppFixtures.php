@@ -21,19 +21,19 @@ class AppFixtures extends Fixture
             $user->setEmail("user$i@example.com")
                 ->setPassword("password$i")
                 ->setName("User $i")
-                ->setRoles(['ROLE_USER']);
+                ->setRoles(['USER']);
             $manager->persist($user);
             $users[] = $user;
         }
 
         // Créer des tailles
         $sizes = [];
-        foreach (['S', 'M', 'L', 'XL', '2XL', '32', '34', '36', '38', '40', '42', '44', '46', '48'] as $sizeLabel) {
-            $size = new Size();
-            $size->setLabel($sizeLabel);
-            $manager->persist($size); // Ajoute l'objet dans Doctrine pour la sauvegarde
-            $sizes[$sizeLabel] = $size; // Associe l'objet au label dans le tableau
-        }
+    foreach (['S', 'M', 'L', 'XL', '2XL', '32', '34', '36', '38', '40', '42', '44', '46', '48'] as $sizeLabel) {
+        $size = new Size();
+        $size->setLabel($sizeLabel);
+        $manager->persist($size); // Ajoute l'objet dans Doctrine pour la sauvegarde
+        $sizes[$sizeLabel] = $size; // Associe l'objet au label dans le tableau
+    }
 
         // Créer des catégories
         $categories = [];
