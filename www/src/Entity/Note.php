@@ -106,4 +106,10 @@ class Note
 
         return $this;
     }
+    public function setUser(?User $user): static
+    {
+        $this->Users = $user;
+
+        return $this;
+    }
 }

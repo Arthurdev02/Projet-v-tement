@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\ClothingRepository;
+use App\Entity\Category;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ClothingRepository;
 
 #[ORM\Entity(repositoryClass: ClothingRepository::class)]
 class Clothing
@@ -129,6 +130,15 @@ class Clothing
         return $this;
     }
 
+    public function addSize(Size $size): static
+    {
+        if ($this->Sizes !== $size) {
+            $this->Sizes = $size;
+        }
+
+        return $this;
+    }
+
     public function getNotes(): ?Note
     {
         return $this->Notes;
@@ -137,6 +147,16 @@ class Clothing
     public function setNotes(?Note $Notes): static
     {
         $this->Notes = $Notes;
+
+        return $this;
+    }
+
+    // Fonction addCategory
+    public function addCategory(Category $category): static
+    {
+        if ($this->categories !== $category) {
+            $this->categories = $category;
+        }
 
         return $this;
     }
