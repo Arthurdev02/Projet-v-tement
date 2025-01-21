@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,12 +36,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'Users')]
+    private Collection $notes;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Note $note = null;
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -128,26 +134,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRole(): ?string
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
     {
-        return $this->role;
+        return $this->notes;
     }
 
-    public function setRole(string $role): static
+    public function addNote(Note $note): static
     {
-        $this->role = $role;
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setUsers($this);
+        }
 
         return $this;
     }
 
-    public function getNote(): ?Note
+    public function removeNote(Note $note): static
     {
-        return $this->note;
-    }
-
-    public function setNote(?Note $note): static
-    {
-        $this->note = $note;
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getUsers() === $this) {
+                $note->setUsers(null);
+            }
+        }
 
         return $this;
     }

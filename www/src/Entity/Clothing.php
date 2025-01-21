@@ -17,24 +17,28 @@ class Clothing
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?int $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $releaseDate = null;
+    private ?\DateTimeInterface $releasDate = null;
 
     #[ORM\Column(length: 255)]
     private ?string $imagePath = null;
 
-    #[ORM\ManyToOne(inversedBy: 'clothing')]
+    #[ORM\ManyToOne(inversedBy: 'clothings')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Category $categories = null;
 
     #[ORM\ManyToOne(inversedBy: 'clothings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Note $note = null;
+    private ?Size $Sizes = null;
+
+    #[ORM\ManyToOne(inversedBy: 'clothings')]
+    private ?Note $Notes = null;
 
     public function getId(): ?int
     {
@@ -65,26 +69,26 @@ class Clothing
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(int $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleasDate(): ?\DateTimeInterface
     {
-        return $this->releaseDate;
+        return $this->releasDate;
     }
 
-    public function setReleaseDate(\DateTimeInterface $releaseDate): static
+    public function setReleasDate(\DateTimeInterface $releasDate): static
     {
-        $this->releaseDate = $releaseDate;
+        $this->releasDate = $releasDate;
 
         return $this;
     }
@@ -113,14 +117,26 @@ class Clothing
         return $this;
     }
 
-    public function getNote(): ?Note
+    public function getSizes(): ?Size
     {
-        return $this->note;
+        return $this->Sizes;
     }
 
-    public function setNote(?Note $note): static
+    public function setSizes(?Size $Sizes): static
     {
-        $this->note = $note;
+        $this->Sizes = $Sizes;
+
+        return $this;
+    }
+
+    public function getNotes(): ?Note
+    {
+        return $this->Notes;
+    }
+
+    public function setNotes(?Note $Notes): static
+    {
+        $this->Notes = $Notes;
 
         return $this;
     }

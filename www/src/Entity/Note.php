@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\NoteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
@@ -15,27 +16,23 @@ class Note
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $averayRating = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $averageRating = null;
 
-    #[ORM\Column]
-    private ?int $userRating = null;
-
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'note')]
-    private Collection $users;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $userRating = null;
 
     /**
      * @var Collection<int, Clothing>
      */
-    #[ORM\OneToMany(targetEntity: Clothing::class, mappedBy: 'note')]
+    #[ORM\OneToMany(targetEntity: Clothing::class, mappedBy: 'Notes')]
     private Collection $clothings;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?User $Users = null;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->clothings = new ArrayCollection();
     }
 
@@ -44,56 +41,26 @@ class Note
         return $this->id;
     }
 
-    public function getAverayRating(): ?int
+    public function getAverageRating(): ?string
     {
-        return $this->averayRating;
+        return $this->averageRating;
     }
 
-    public function setAverayRating(int $averayRating): static
+    public function setAverageRating(string $averageRating): static
     {
-        $this->averayRating = $averayRating;
+        $this->averageRating = $averageRating;
 
         return $this;
     }
 
-    public function getUserRating(): ?int
+    public function getUserRating(): ?string
     {
         return $this->userRating;
     }
 
-    public function setUserRating(int $userRating): static
+    public function setUserRating(string $userRating): static
     {
         $this->userRating = $userRating;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setNote($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getNote() === $this) {
-                $user->setNote(null);
-            }
-        }
 
         return $this;
     }
@@ -110,7 +77,7 @@ class Note
     {
         if (!$this->clothings->contains($clothing)) {
             $this->clothings->add($clothing);
-            $clothing->setNote($this);
+            $clothing->setNotes($this);
         }
 
         return $this;
@@ -120,10 +87,22 @@ class Note
     {
         if ($this->clothings->removeElement($clothing)) {
             // set the owning side to null (unless already changed)
-            if ($clothing->getNote() === $this) {
-                $clothing->setNote(null);
+            if ($clothing->getNotes() === $this) {
+                $clothing->setNotes(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsers(): ?User
+    {
+        return $this->Users;
+    }
+
+    public function setUsers(?User $Users): static
+    {
+        $this->Users = $Users;
 
         return $this;
     }

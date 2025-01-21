@@ -16,17 +16,17 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $label = null;
+    private ?string $title = null;
 
     /**
      * @var Collection<int, Clothing>
      */
     #[ORM\OneToMany(targetEntity: Clothing::class, mappedBy: 'categories')]
-    private Collection $clothing;
+    private Collection $clothings;
 
     public function __construct()
     {
-        $this->clothing = new ArrayCollection();
+        $this->clothings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -34,17 +34,45 @@ class Category
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getTitle(): ?string
     {
-        return $this->label;
+        return $this->title;
     }
 
-    public function setLabel(string $label): static
+    public function setTitle(string $title): static
     {
-        $this->label = $label;
+        $this->title = $title;
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Clothing>
+     */
+    public function getClothings(): Collection
+    {
+        return $this->clothings;
+    }
 
+    public function addClothing(Clothing $clothing): static
+    {
+        if (!$this->clothings->contains($clothing)) {
+            $this->clothings->add($clothing);
+            $clothing->setCategories($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClothing(Clothing $clothing): static
+    {
+        if ($this->clothings->removeElement($clothing)) {
+            // set the owning side to null (unless already changed)
+            if ($clothing->getCategories() === $this) {
+                $clothing->setCategories(null);
+            }
+        }
+
+        return $this;
+    }
 }
